@@ -1,0 +1,37 @@
+---
+import { href } from '@/lib/paths';
+import type { Crumb } from '@/lib/schema';
+
+interface Props {
+  items: Crumb[];
+}
+const { items } = Astro.props;
+---
+
+<nav aria-label="Sayfa konumu (breadcrumb)">
+  <ol class="flex flex-wrap items-center gap-x-2 gap-y-1 text-[0.82rem] text-white/60">
+    {
+      items.map((item, i) => {
+        const last = i === items.length - 1;
+        return (
+          <li class="inline-flex items-center gap-2">
+            {last ? (
+              <span aria-current="page" class="text-white/90">
+                {item.label}
+              </span>
+            ) : (
+              <>
+                <a href={href(item.path)} class="link-underline transition-colors hover:text-white">
+                  {item.label}
+                </a>
+                <span aria-hidden="true" class="text-gold-500">
+                  /
+                </span>
+              </>
+            )}
+          </li>
+        );
+      })
+    }
+  </ol>
+</nav>

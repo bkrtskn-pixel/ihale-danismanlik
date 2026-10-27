@@ -1,0 +1,26 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Icon from '@/components/Icon.astro';
+import { mainNav } from '@/data/navigation';
+import { href } from '@/lib/paths';
+---
+
+<BaseLayout title="Sayfa bulunamadı" description="Aradığınız sayfa bulunamadı." noindex>
+  <section class="on-dark relative isolate flex min-h-[80vh] items-center overflow-hidden bg-navy-900 pt-[var(--header-h)] text-white">
+    <div class="bg-grid-dark absolute inset-0 -z-10" aria-hidden="true"></div>
+    <div class="container-x py-24">
+      <p class="font-mono text-sm tracking-[0.2em] text-gold-500">HATA 404</p>
+      <h1 class="h-display mt-6 max-w-3xl text-white">Aradığınız sayfa bulunamadı.</h1>
+      <p class="lead mt-6 max-w-xl">Sayfa taşınmış veya adres hatalı yazılmış olabilir. Aşağıdaki bağlantılardan devam edebilirsiniz.</p>
+      <div class="mt-10 flex flex-wrap gap-3">
+        <a href={href('/')} class="btn btn-primary">
+          Ana sayfaya dön
+          <Icon name="arrow-right" />
+        </a>
+      </div>
+      <ul class="mt-12 flex flex-wrap gap-x-8 gap-y-3 border-t border-white/10 pt-8 text-[0.95rem] text-white/70">
+        {mainNav.slice(1).map((n) => <li><a href={href(n.path)} class="link-underline hover:text-white">{n.label}</a></li>)}
+      </ul>
+    </div>
+  </section>
+</BaseLayout>

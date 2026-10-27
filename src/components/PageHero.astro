@@ -1,0 +1,50 @@
+---
+import Breadcrumbs from './Breadcrumbs.astro';
+import type { Crumb } from '@/lib/schema';
+
+interface Props {
+  title: string;
+  lead?: string;
+  eyebrow?: string;
+  breadcrumbs: Crumb[];
+  /** Başlık yanında sayı/etiket (ör. hizmet numarası) */
+  index?: string;
+}
+
+const { title, lead, eyebrow, breadcrumbs, index } = Astro.props;
+const hasAside = Astro.slots.has('aside');
+---
+
+<section class="on-dark relative isolate overflow-hidden bg-navy-900 pt-[calc(var(--header-h)+3.5rem)] pb-16 text-white sm:pb-20 lg:pt-[calc(var(--header-h)+5rem)] lg:pb-24">
+  <div class="bg-grid-dark absolute inset-0 -z-10 [mask-image:linear-gradient(180deg,black,transparent_95%)]" aria-hidden="true"></div>
+  <div
+    class="absolute -top-40 -right-40 -z-10 size-[520px] rounded-full bg-[radial-gradient(circle,rgb(196_164_106/0.14),transparent_65%)]"
+    aria-hidden="true"
+  >
+  </div>
+  <div class="container-x">
+    <Breadcrumbs items={breadcrumbs} />
+    <div class:list={['mt-10 grid gap-12 lg:mt-14', hasAside && 'lg:grid-cols-12 lg:items-end']}>
+      <div class:list={[hasAside ? 'lg:col-span-7' : 'max-w-4xl']}>
+        {
+          (eyebrow || index) && (
+            <p class="eyebrow hero-rise" style="--rise-delay:0ms">
+              {index && <span class="font-mono tracking-normal">{index}</span>}
+              {eyebrow}
+            </p>
+          )
+        }
+        <h1 class="h-display hero-rise mt-6 text-white" style="--rise-delay:80ms">{title}</h1>
+        {lead && <p class="lead hero-rise mt-7 max-w-2xl" style="--rise-delay:160ms">{lead}</p>}
+        <slot />
+      </div>
+      {
+        hasAside && (
+          <div class="hero-rise lg:col-span-5" style="--rise-delay:240ms">
+            <slot name="aside" />
+          </div>
+        )
+      }
+    </div>
+  </div>
+</section>

@@ -1,0 +1,179 @@
+---
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+import { mainNav } from '@/data/navigation';
+import { href, isActivePath } from '@/lib/paths';
+import { site } from '@/data/site';
+
+const current = Astro.url.pathname;
+---
+
+<header
+  class="on-dark fixed inset-x-0 top-0 z-50 border-b border-transparent bg-navy-900/85 backdrop-blur-md transition-[background-color,border-color,box-shadow] duration-300 data-[scrolled=true]:border-white/10 data-[scrolled=true]:bg-navy-900/95 data-[scrolled=true]:shadow-[0_10px_30px_-20px_rgb(0_0_0/0.6)]"
+  data-header
+>
+  <a
+    href="#icerik"
+    class="sr-only z-[60] rounded-sm bg-gold-500 px-4 py-2 font-semibold text-navy-900 focus:not-sr-only focus:absolute focus:top-3 focus:left-3"
+  >
+    İçeriğe geç
+  </a>
+  <div class="container-x flex h-[var(--header-h)] items-center justify-between gap-6">
+    <a href={href('/')} class="relative z-[55] shrink-0 rounded-sm" aria-label={`${site.brand.name} — ana sayfa`}>
+      <Logo tone="light" />
+    </a>
+
+    <nav aria-label="Ana menü" class="hidden lg:block">
+      <ul class="flex items-center gap-1">
+        {
+          mainNav.map((item) => {
+            const active = isActivePath(current, item.path);
+            return (
+              <li>
+                <a
+                  href={href(item.path)}
+                  aria-current={active ? 'page' : undefined}
+                  class:list={[
+                    'relative inline-flex h-10 items-center px-3.5 font-display text-[0.92rem] font-medium transition-colors duration-300',
+                    'after:absolute after:inset-x-3.5 after:bottom-1 after:h-px after:origin-left after:bg-gold-500 after:transition-transform after:duration-300',
+                    active ? 'text-white after:scale-x-100' : 'text-white/70 after:scale-x-0 hover:text-white hover:after:scale-x-100',
+                  ]}
+                >
+                  {item.label}
+                </a>
+              </li>
+            );
+          })
+        }
+      </ul>
+    </nav>
+
+    <div class="flex items-center gap-3">
+      <a href={href('/iletisim/')} class="btn btn-primary hidden min-h-10 px-5 py-2 text-[0.88rem] lg:inline-flex">
+        Danışmanlık Talep Et
+      </a>
+      <button
+        type="button"
+        class="relative z-[55] inline-flex size-11 items-center justify-center rounded-sm border border-white/20 text-white transition-colors hover:border-white/50 lg:hidden"
+        aria-expanded="false"
+        aria-controls="mobil-menu"
+        data-menu-toggle
+      >
+        <span class="sr-only" data-menu-label>Menüyü aç</span>
+        <span class="relative block h-3.5 w-5" aria-hidden="true">
+          <span class="menu-bar top-0"></span>
+          <span class="menu-bar top-1/2 -translate-y-1/2"></span>
+          <span class="menu-bar bottom-0"></span>
+        </span>
+      </button>
+    </div>
+  </div>
+
+</header>
+
+<!-- Mobil menü paneli (header dışında: backdrop-filter fixed konumlandırmayı kısıtlar) -->
+  <div
+    id="mobil-menu"
+    class="mobile-panel bg-grid-dark fixed inset-0 z-40 flex flex-col bg-navy-900 pt-[var(--header-h)] lg:hidden"
+    data-menu-panel
+    data-open="false"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Mobil menü"
+  >
+    <nav aria-label="Mobil ana menü" class="container-x flex flex-1 flex-col overflow-y-auto pt-8 pb-10">
+      <ul class="divide-y divide-white/10 border-y border-white/10">
+        {
+          mainNav.map((item, i) => {
+            const active = isActivePath(current, item.path);
+            return (
+              <li class="mobile-item" style={`--i:${i}`}>
+                <a
+                  href={href(item.path)}
+                  aria-current={active ? 'page' : undefined}
+                  class:list={[
+                    'flex items-center justify-between py-5 font-display text-2xl font-semibold tracking-[-0.02em]',
+                    active ? 'text-gold-500' : 'text-white',
+                  ]}
+                >
+                  <span>{item.label}</span>
+                  <span class="font-mono text-xs font-normal text-white/50">{String(i + 1).padStart(2, '0')}</span>
+                </a>
+              </li>
+            );
+          })
+        }
+      </ul>
+      <div class="mobile-item mt-auto pt-10" style="--i:6">
+        <a href={href('/iletisim/')} class="btn btn-primary w-full">
+          Danışmanlık Talep Et
+          <Icon name="arrow-right" />
+        </a>
+      </div>
+    </nav>
+  </div>
+
+
+<style>
+  .menu-bar {
+    position: absolute;
+    left: 0;
+    display: block;
+    height: 1.5px;
+    width: 100%;
+    background: currentColor;
+    transition:
+      transform 0.35s var(--ease-out-soft),
+      opacity 0.2s,
+      top 0.35s var(--ease-out-soft),
+      bottom 0.35s var(--ease-out-soft);
+  }
+
+  [aria-expanded='true'] .menu-bar:nth-child(1) {
+    top: 50%;
+    transform: translateY(-50%) rotate(45deg);
+  }
+
+  [aria-expanded='true'] .menu-bar:nth-child(2) {
+    opacity: 0;
+  }
+
+  [aria-expanded='true'] .menu-bar:nth-child(3) {
+    bottom: 50%;
+    transform: translateY(50%) rotate(-45deg);
+  }
+
+  .mobile-panel {
+    visibility: hidden;
+    opacity: 0;
+    clip-path: inset(0 0 100% 0);
+    transition:
+      opacity 0.35s var(--ease-out-soft),
+      clip-path 0.5s var(--ease-out-soft),
+      visibility 0s linear 0.5s;
+  }
+
+  .mobile-panel[data-open='true'] {
+    visibility: visible;
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+    transition:
+      opacity 0.35s var(--ease-out-soft),
+      clip-path 0.5s var(--ease-out-soft),
+      visibility 0s;
+  }
+
+  .mobile-item {
+    opacity: 0;
+    transform: translateY(12px);
+    transition:
+      opacity 0.45s var(--ease-out-soft),
+      transform 0.45s var(--ease-out-soft);
+  }
+
+  .mobile-panel[data-open='true'] .mobile-item {
+    opacity: 1;
+    transform: none;
+    transition-delay: calc(120ms + var(--i) * 45ms);
+  }
+</style>

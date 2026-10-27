@@ -1,0 +1,42 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Icon from './Icon.astro';
+import TechCover from './TechCover.astro';
+import { href } from '@/lib/paths';
+import { readingTime } from '@/lib/reading-time';
+
+interface Props {
+  article: CollectionEntry<'articles'>;
+  headingLevel?: 'h2' | 'h3';
+  delay?: number;
+}
+
+const { article, headingLevel: H = 'h3', delay = 0 } = Astro.props;
+const minutes = readingTime(article.body);
+const url = href(`/bilgi-merkezi/${article.id}/`);
+---
+
+<article class="card card-hover group flex h-full flex-col overflow-hidden" data-reveal style={`--reveal-delay:${delay}ms`}>
+  <TechCover variant={article.data.cover} class="aspect-[16/10] w-full transition-[filter] duration-500 group-hover:brightness-110" />
+  <div class="flex flex-1 flex-col p-7">
+    <p class="flex items-center gap-2 text-[0.8rem] text-muted">
+      <Icon name="clock" class="size-4" />
+      <span>{minutes} dk okuma</span>
+    </p>
+    <H class="h-card mt-4">
+      <a href={url} class="after:absolute after:inset-0 after:content-[''] focus-visible:outline-none">{article.data.title}</a>
+    </H>
+    <p class="mt-4 line-clamp-3 flex-1 text-[0.95rem] leading-relaxed text-muted">{article.data.summary}</p>
+    <span class="link-arrow mt-7" aria-hidden="true">
+      Makaleyi Oku
+      <Icon name="arrow-right" />
+    </span>
+  </div>
+</article>
+
+<style>
+  article:has(a:focus-visible) {
+    outline: 2px solid var(--color-navy-900);
+    outline-offset: 3px;
+  }
+</style>

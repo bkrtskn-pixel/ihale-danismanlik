@@ -1,0 +1,49 @@
+---
+// İLERİDE KULLANILACAK FORM BİLEŞENİ
+// Prototip aşamasında hiçbir sayfada gösterilmez (src/data/site.ts →
+// contactForm.enabled = false). Kişisel veri toplanmaya başlanmadan önce:
+//   1) KVKK aydınlatma metni ve gizlilik politikası tamamlanmalı,
+//   2) formu işleyecek güvenli bir sunucu tarafı uç nokta (endpoint) hazırlanmalı,
+//   3) contactForm.enabled = true ve contactForm.endpoint tanımlanmalıdır.
+import { site } from '@/data/site';
+import { href } from '@/lib/paths';
+
+const { endpoint } = site.contactForm;
+const field = 'mt-2 block w-full rounded-sm border border-line-strong bg-white px-4 py-3 text-[0.97rem] text-ink transition-colors focus:border-navy-900 focus:outline-none';
+---
+
+{
+  site.contactForm.enabled && endpoint && (
+    <form action={endpoint} method="post" class="grid gap-5 sm:grid-cols-2">
+      <label class="block text-sm font-medium text-navy-900">
+        Ad Soyad
+        <input name="ad" required autocomplete="name" class={field} />
+      </label>
+      <label class="block text-sm font-medium text-navy-900">
+        Firma
+        <input name="firma" autocomplete="organization" class={field} />
+      </label>
+      <label class="block text-sm font-medium text-navy-900">
+        E-posta
+        <input name="eposta" type="email" required autocomplete="email" class={field} />
+      </label>
+      <label class="block text-sm font-medium text-navy-900">
+        Telefon
+        <input name="telefon" type="tel" autocomplete="tel" class={field} />
+      </label>
+      <label class="block text-sm font-medium text-navy-900 sm:col-span-2">
+        Mesajınız
+        <textarea name="mesaj" rows="5" required class={field} />
+      </label>
+      <label class="flex items-start gap-3 text-sm text-muted sm:col-span-2">
+        <input type="checkbox" name="kvkk" required class="mt-1 size-4 accent-navy-900" />
+        <span>
+          <a href={href('/kvkk/')} class="underline">KVKK Aydınlatma Metni</a>'ni okudum.
+        </span>
+      </label>
+      <div class="sm:col-span-2">
+        <button type="submit" class="btn btn-navy">Gönder</button>
+      </div>
+    </form>
+  )
+}

@@ -1,0 +1,136 @@
+---
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+import { site } from '@/data/site';
+import { mainNav, legalNav } from '@/data/navigation';
+import { services } from '@/data/services';
+import { getContactChannels, socialLinks } from '@/lib/contact';
+import { href } from '@/lib/paths';
+
+const channels = getContactChannels().filter((c) => c.value && c.type !== 'hours');
+const socials = socialLinks();
+const year = new Date().getFullYear();
+const iconFor = { phone: 'phone', email: 'mail', whatsapp: 'whatsapp', address: 'map-pin', hours: 'clock' } as const;
+---
+
+<footer class="on-dark relative overflow-hidden bg-navy-950 text-white/70">
+  <div class="bg-grid-dark pointer-events-none absolute inset-0 opacity-60" aria-hidden="true"></div>
+  <div class="container-x relative">
+    <div class="grid gap-12 border-b border-white/10 py-16 md:grid-cols-2 lg:grid-cols-12 lg:gap-8 lg:py-20">
+      <div class="lg:col-span-4">
+        <a href={href('/')} class="inline-block rounded-sm" aria-label={`${site.brand.name} — ana sayfa`}>
+          <Logo tone="light" />
+        </a>
+        <p class="mt-6 max-w-sm text-[0.95rem] leading-relaxed">
+          Yapım işi ihalelerinde doküman incelemesi, yeterlik, teklif hazırlığı, EKAP süreçleri ve sözleşme dönemine yönelik danışmanlık.
+        </p>
+        {
+          socials.length > 0 && (
+            <ul class="mt-6 flex gap-2" aria-label="Sosyal medya">
+              {socials.map((s) => (
+                <li>
+                  <a
+                    href={s.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="inline-flex size-10 items-center justify-center rounded-sm border border-white/15 text-white/80 transition-colors hover:border-gold-500 hover:text-gold-500"
+                  >
+                    <Icon name={s.key} class="size-[18px]" label={s.label} />
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )
+        }
+      </div>
+
+      <nav aria-labelledby="footer-hizmetler" class="lg:col-span-3">
+        <h2 id="footer-hizmetler" class="font-display text-xs font-semibold tracking-[0.18em] text-gold-500 uppercase">Hizmetler</h2>
+        <ul class="mt-5 space-y-3 text-[0.92rem]">
+          {
+            services.map((s) => (
+              <li>
+                <a href={href(`/hizmetler/${s.slug}/`)} class="link-underline transition-colors hover:text-white">
+                  {s.title}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
+      <nav aria-labelledby="footer-sayfalar" class="lg:col-span-2">
+        <h2 id="footer-sayfalar" class="font-display text-xs font-semibold tracking-[0.18em] text-gold-500 uppercase">Sayfalar</h2>
+        <ul class="mt-5 space-y-3 text-[0.92rem]">
+          {
+            mainNav.map((item) => (
+              <li>
+                <a href={href(item.path)} class="link-underline transition-colors hover:text-white">
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
+      <div class="lg:col-span-3">
+        <h2 class="font-display text-xs font-semibold tracking-[0.18em] text-gold-500 uppercase">İletişim</h2>
+        {
+          channels.length > 0 ? (
+            <ul class="mt-5 space-y-3 text-[0.92rem]">
+              {channels.map((c) => (
+                <li>
+                  <a
+                    href={c.link!}
+                    class="inline-flex items-start gap-3 transition-colors hover:text-white"
+                    {...(c.type === 'whatsapp' || c.type === 'address' ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                  >
+                    <Icon name={iconFor[c.type]} class="mt-0.5 size-[18px] shrink-0 text-gold-500" />
+                    <span>{c.value}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p class="mt-5 text-[0.92rem] leading-relaxed">
+              Doğrulanmış iletişim bilgileri yayına alınmadan önce eklenecektir. Güncel durum için{' '}
+              <a href={href('/iletisim/')} class="text-white underline decoration-gold-500 underline-offset-4">
+                iletişim sayfasını
+              </a>{' '}
+              inceleyebilirsiniz.
+            </p>
+          )
+        }
+        <a href={href('/iletisim/')} class="link-arrow mt-7 text-white!">
+          Danışmanlık talep edin
+          <Icon name="arrow-right" />
+        </a>
+      </div>
+    </div>
+
+    <div class="flex flex-col gap-5 py-8 text-[0.82rem] lg:flex-row lg:items-center lg:justify-between">
+      <div class="space-y-2">
+        <p>© {year} {site.brand.name}. Tüm hakları saklıdır.</p>
+        <p class="text-white/55">Bu site Kamu İhale Kurumu veya EKAP ile resmî bir bağlantı içermez.</p>
+      </div>
+      <ul class="flex flex-wrap gap-x-6 gap-y-2">
+        {
+          legalNav.map((item) => (
+            <li>
+              <a href={href(item.path)} class="link-underline transition-colors hover:text-white">
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    {
+      site.prototype.showNotice && (
+        <p class="border-t border-white/10 py-5 text-center text-[0.78rem] text-white/55">{site.prototype.noticeText}</p>
+      )
+    }
+  </div>
+</footer>

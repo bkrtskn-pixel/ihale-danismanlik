@@ -1,0 +1,51 @@
+---
+import '@fontsource-variable/manrope';
+import '@fontsource-variable/inter';
+import '@/styles/global.css';
+import manropeLatin from '@fontsource-variable/manrope/files/manrope-latin-wght-normal.woff2?url';
+import interLatin from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
+
+import SEO, { type SEOProps } from '@/components/SEO.astro';
+import Header from '@/components/Header.astro';
+import Footer from '@/components/Footer.astro';
+import JsonLd from '@/components/JsonLd.astro';
+import { asset } from '@/lib/paths';
+import { organizationSchema, websiteSchema, withContext } from '@/lib/schema';
+
+interface Props extends SEOProps {
+  /** Sayfaya özgü ek JSON-LD düğümleri (@graph içine eklenir). */
+  schema?: Record<string, unknown>[];
+}
+
+const { schema = [], ...seo } = Astro.props;
+const graph = withContext(organizationSchema(Astro.site), websiteSchema(Astro.site), ...schema);
+---
+
+<!doctype html>
+<html lang="tr" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#10243A" />
+    <meta name="format-detection" content="telephone=no" />
+    <script is:inline>document.documentElement.classList.add('js');</script>
+    <link rel="preload" href={manropeLatin} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={interLatin} as="font" type="font/woff2" crossorigin />
+    <link rel="icon" href={asset('favicon.svg')} type="image/svg+xml" />
+    <link rel="icon" href={asset('favicon.ico')} sizes="32x32" />
+    <link rel="apple-touch-icon" href={asset('apple-touch-icon.png')} />
+    <link rel="sitemap" href={asset('sitemap-index.xml')} />
+    <SEO {...seo} />
+    <JsonLd data={graph} />
+  </head>
+  <body>
+    <Header />
+    <main id="icerik" tabindex="-1" class="outline-none">
+      <slot />
+    </main>
+    <Footer />
+    <script>
+      import '@/scripts/main';
+    </script>
+  </body>
+</html>

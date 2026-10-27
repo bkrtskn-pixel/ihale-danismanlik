@@ -1,0 +1,18 @@
+---
+// Yasal metinlerde henüz doldurulmamış alanları açıkça işaretler.
+interface Props {
+  label: string;
+  value?: string | null;
+}
+const { label, value } = Astro.props;
+---
+
+{
+  value ? (
+    <span class="font-medium text-navy-900">{value}</span>
+  ) : (
+    <mark class="rounded-sm border border-dashed border-gold-500 bg-gold-300/25 px-1.5 py-0.5 text-[0.92em] font-medium text-ink not-italic">
+      [{label} — Yayından önce doldurulacak]
+    </mark>
+  )
+}

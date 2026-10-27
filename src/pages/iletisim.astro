@@ -1,0 +1,146 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHero from '@/components/PageHero.astro';
+import Icon from '@/components/Icon.astro';
+import ContactForm from '@/components/ContactForm.astro';
+import { site } from '@/data/site';
+import { getContactChannels, hasAnyContact } from '@/lib/contact';
+import { breadcrumbSchema } from '@/lib/schema';
+
+const crumbs = [
+  { label: 'Ana Sayfa', path: '/' },
+  { label: 'İletişim', path: '/iletisim/' },
+];
+
+// Çalışma saatleri yalnızca gerçek bilgi girildiğinde gösterilir.
+const channels = getContactChannels().filter((c) => c.type !== 'hours' || c.value);
+const anyContact = hasAnyContact();
+const iconFor = { phone: 'phone', email: 'mail', whatsapp: 'whatsapp', address: 'map-pin', hours: 'clock' } as const;
+
+const prepare = [
+  { title: 'İhale bilgileri', text: 'İhale kayıt numarası (İKN), idare adı, işin adı ve son teklif tarihi.' },
+  { title: 'İhtiyaç duyulan destek', text: 'Doküman inceleme, yeterlik, maliyet analizi, EKAP veya sözleşme süreci gibi konu başlıkları.' },
+  { title: 'Mevcut durum', text: 'Hazırlığın hangi aşamada olduğu ve öne çıkan sorular ya da belirsizlikler.' },
+  { title: 'Zaman planı', text: 'Çalışmanın tamamlanması gereken tarih ve ekibinizin uygunluk durumu.' },
+];
+---
+
+<BaseLayout
+  title="İletişim"
+  description="Kamu ihale ve yapım işi danışmanlığı için ön görüşme talebi. İletişim kanalları ve görüşmeye hazırlık için gerekli bilgiler."
+  schema={[breadcrumbSchema(crumbs, Astro.site), { '@type': 'ContactPage', name: 'İletişim', inLanguage: 'tr-TR' }]}
+>
+  <PageHero
+    breadcrumbs={crumbs}
+    eyebrow="İletişim"
+    title="Ön görüşme talep edin"
+    lead="Katılmayı planladığınız ihale veya yürüttüğünüz sözleşme hakkında kısa bir ön görüşmeyle ihtiyacınızı ve çalışma kapsamını birlikte netleştirelim."
+  />
+
+  <section class="section on-light" aria-labelledby="kanallar-baslik">
+    <div class="container-x grid gap-14 lg:grid-cols-12 lg:gap-8">
+      <div class="lg:col-span-6">
+        <p class="eyebrow" data-reveal>İletişim kanalları</p>
+        <h2 id="kanallar-baslik" class="h-section mt-5" data-reveal>Bize ulaşın</h2>
+
+        {
+          !anyContact && (
+            <div class="mt-8 flex gap-4 rounded-sm border border-dashed border-gold-500 bg-gold-300/15 p-5" role="note" data-reveal>
+              <Icon name="pending" class="mt-0.5 size-5 shrink-0 text-gold-700" />
+              <p class="text-[0.93rem] leading-relaxed text-ink">
+                <strong class="font-semibold">Prototip notu:</strong> Doğrulanmış iletişim bilgileri henüz eklenmemiştir. Bilgiler
+                merkezi yapılandırma dosyasına girildiğinde aşağıdaki kanallar otomatik olarak etkinleşecektir.
+              </p>
+            </div>
+          )
+        }
+
+        <ul class="mt-8 grid gap-4 sm:grid-cols-2">
+          {
+            channels.map((c, i) => {
+              const external = c.type === 'whatsapp' || c.type === 'address';
+              return (
+                <li data-reveal style={`--reveal-delay:${(i % 2) * 70}ms`}>
+                  {c.value && c.link ? (
+                    <a
+                      href={c.link}
+                      class="card card-hover group flex h-full flex-col p-6"
+                      {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                    >
+                      <span class="inline-flex size-11 items-center justify-center rounded-sm bg-navy-900 text-gold-500">
+                        <Icon name={iconFor[c.type]} class="size-5" />
+                      </span>
+                      <span class="mt-5 text-[0.8rem] font-medium tracking-[0.08em] text-muted uppercase">{c.label}</span>
+                      <span class="mt-1 font-display text-lg font-semibold break-words text-navy-900">{c.value}</span>
+                      <span class="link-arrow mt-4 text-[0.88rem]">
+                        {c.actionLabel}
+                        <Icon name={external ? 'arrow-up-right' : 'arrow-right'} />
+                      </span>
+                    </a>
+                  ) : c.value ? (
+                    <div class="card flex h-full flex-col p-6">
+                      <span class="inline-flex size-11 items-center justify-center rounded-sm bg-navy-900 text-gold-500">
+                        <Icon name={iconFor[c.type]} class="size-5" />
+                      </span>
+                      <span class="mt-5 text-[0.8rem] font-medium tracking-[0.08em] text-muted uppercase">{c.label}</span>
+                      <span class="mt-1 font-display text-lg font-semibold text-navy-900">{c.value}</span>
+                    </div>
+                  ) : (
+                    <div class="flex h-full flex-col rounded-sm border border-dashed border-line-strong bg-paper p-6" aria-label={`${c.label}: yayından önce eklenecek`}>
+                      <span class="inline-flex size-11 items-center justify-center rounded-sm border border-line-strong text-muted-strong">
+                        <Icon name={iconFor[c.type]} class="size-5" />
+                      </span>
+                      <span class="mt-5 text-[0.8rem] font-medium tracking-[0.08em] text-muted-strong uppercase">{c.label}</span>
+                      <span class="mt-2 inline-flex w-fit items-center gap-1.5 rounded-full border border-gold-500/60 px-2.5 py-1 text-[0.75rem] font-medium text-gold-700">
+                        Yayından önce eklenecek
+                      </span>
+                    </div>
+                  )}
+                </li>
+              );
+            })
+          }
+        </ul>
+
+        <ContactForm />
+      </div>
+
+      <aside class="lg:col-span-5 lg:col-start-8" aria-labelledby="hazirlik-baslik">
+        <div class="on-dark relative overflow-hidden rounded-sm bg-navy-900 p-8 text-white sm:p-10" data-reveal>
+          <div class="bg-grid-dark absolute inset-0" aria-hidden="true"></div>
+          <div class="relative">
+            <p class="eyebrow">Görüşmeye hazırlık</p>
+            <h2 id="hazirlik-baslik" class="mt-5 font-display text-2xl font-bold text-white">İlk görüşmede faydalı olacak bilgiler</h2>
+            <ol class="mt-8 space-y-6">
+              {
+                prepare.map((p, i) => (
+                  <li class="flex gap-5">
+                    <span class="font-mono text-sm text-gold-500">{String(i + 1).padStart(2, '0')}</span>
+                    <div>
+                      <h3 class="font-display font-semibold text-white">{p.title}</h3>
+                      <p class="mt-1 text-[0.93rem] leading-relaxed text-white/70">{p.text}</p>
+                    </div>
+                  </li>
+                ))
+              }
+            </ol>
+            <div class="mt-10 flex gap-3 border-t border-white/10 pt-6 text-[0.88rem] leading-relaxed text-white/75">
+              <Icon name="lock" class="mt-0.5 size-5 shrink-0 text-gold-500" />
+              <p>
+                İlk iletişimde EKAP kullanıcı bilgileri, elektronik imza bilgileri veya teklif fiyatı gibi hassas bilgileri paylaşmayınız. Bu
+                bilgiler danışmanlık sürecinin hiçbir aşamasında talep edilmez.
+              </p>
+            </div>
+          </div>
+        </div>
+        {
+          site.prototype.showNotice && (
+            <p class="mt-6 text-[0.85rem] leading-relaxed text-muted">
+              Bu site bir tanıtım prototipidir; şu aşamada çevrim içi form üzerinden kişisel veri toplanmamaktadır.
+            </p>
+          )
+        }
+      </aside>
+    </div>
+  </section>
+</BaseLayout>

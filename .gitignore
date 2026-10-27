@@ -1,0 +1,29 @@
+# Bağımlılıklar
+node_modules/
+
+# Astro / build çıktıları
+dist/
+.astro/
+
+# Günlükler
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Ortam değişkenleri (gizli bilgi depoya eklenmez)
+.env
+.env.*
+!.env.example
+
+# Editör ve işletim sistemi dosyaları
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+# Geçici dosyalar
+*.log
+*.tmp
+.cache/

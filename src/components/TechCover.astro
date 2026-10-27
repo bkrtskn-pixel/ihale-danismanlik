@@ -1,0 +1,85 @@
+---
+// Makale ve sayfa kapakları için özgün soyut teknik kompozisyonlar (SVG).
+interface Props {
+  variant: 'document' | 'certificate' | 'network';
+  class?: string;
+}
+const { variant, class: className = '' } = Astro.props;
+---
+
+<div class:list={['relative overflow-hidden bg-navy-900', className]} aria-hidden="true">
+  <svg viewBox="0 0 480 300" preserveAspectRatio="xMidYMid slice" class="absolute inset-0 h-full w-full" focusable="false">
+    <defs>
+      <pattern id={`tc-grid-${variant}`} width="16" height="16" patternUnits="userSpaceOnUse">
+        <path d="M16 0H0V16" fill="none" stroke="#FFFFFF" stroke-opacity=".05" />
+      </pattern>
+    </defs>
+    <rect width="480" height="300" fill={`url(#tc-grid-${variant})`} />
+    {
+      variant === 'document' && (
+        <g fill="none" stroke="#FFFFFF">
+          <rect x="150" y="54" width="150" height="196" stroke-opacity=".25" transform="rotate(-6 225 152)" />
+          <rect x="172" y="44" width="150" height="196" fill="#10243A" stroke-opacity=".7" stroke-width="1.25" />
+          <g stroke-opacity=".35">
+            <line x1="190" y1="76" x2="282" y2="76" />
+            <line x1="190" y1="92" x2="300" y2="92" />
+            <line x1="190" y1="108" x2="270" y2="108" />
+            <line x1="190" y1="140" x2="300" y2="140" />
+            <line x1="190" y1="156" x2="300" y2="156" />
+            <line x1="190" y1="172" x2="250" y2="172" />
+            <line x1="190" y1="204" x2="300" y2="204" />
+          </g>
+          <circle cx="310" cy="190" r="32" stroke="#C4A46A" stroke-width="1.5" />
+          <line x1="333" y1="213" x2="362" y2="242" stroke="#C4A46A" stroke-width="2" stroke-linecap="round" />
+          <line x1="40" y1="250" x2="440" y2="250" stroke-opacity=".2" />
+        </g>
+      )
+    }
+    {
+      variant === 'certificate' && (
+        <g fill="none" stroke="#FFFFFF">
+          <rect x="110" y="70" width="210" height="140" stroke-opacity=".2" transform="translate(-14 14)" />
+          <rect x="110" y="70" width="210" height="140" fill="#10243A" stroke-opacity=".7" stroke-width="1.25" />
+          <rect x="120" y="80" width="190" height="120" stroke-opacity=".15" />
+          <g stroke-opacity=".35">
+            <line x1="140" y1="108" x2="260" y2="108" />
+            <line x1="140" y1="126" x2="290" y2="126" />
+            <line x1="140" y1="144" x2="230" y2="144" />
+          </g>
+          <circle cx="280" cy="180" r="22" stroke="#C4A46A" stroke-width="1.5" />
+          <circle cx="280" cy="180" r="14" stroke="#C4A46A" stroke-opacity=".5" />
+          <polyline points="266,198 260,236 280,226 300,236 294,198" stroke="#C4A46A" stroke-width="1.25" />
+          <g stroke-opacity=".3">
+            <line x1="350" y1="210" x2="350" y2="96" />
+            <line x1="370" y1="210" x2="370" y2="122" />
+            <line x1="390" y1="210" x2="390" y2="80" />
+            <line x1="410" y1="210" x2="410" y2="140" />
+          </g>
+          <line x1="40" y1="250" x2="440" y2="250" stroke-opacity=".2" />
+        </g>
+      )
+    }
+    {
+      variant === 'network' && (
+        <g fill="none" stroke="#FFFFFF">
+          <rect x="120" y="60" width="240" height="150" rx="4" fill="#10243A" stroke-opacity=".7" stroke-width="1.25" />
+          <line x1="120" y1="80" x2="360" y2="80" stroke-opacity=".3" />
+          <line x1="200" y1="240" x2="280" y2="240" stroke-opacity=".5" />
+          <line x1="240" y1="210" x2="240" y2="240" stroke-opacity=".5" />
+          <g stroke-opacity=".45">
+            <line x1="172" y1="150" x2="230" y2="118" />
+            <line x1="230" y1="118" x2="292" y2="160" />
+            <line x1="292" y1="160" x2="320" y2="112" />
+          </g>
+          <circle cx="172" cy="150" r="7" fill="#10243A" stroke-opacity=".8" />
+          <circle cx="230" cy="118" r="7" fill="#10243A" stroke-opacity=".8" />
+          <circle cx="292" cy="160" r="7" fill="#C4A46A" stroke="#C4A46A" />
+          <circle cx="320" cy="112" r="7" fill="#10243A" stroke-opacity=".8" />
+          <circle cx="135" cy="70" r="2.5" fill="#C4A46A" stroke="none" />
+          <circle cx="145" cy="70" r="2.5" fill="#FFFFFF" fill-opacity=".3" stroke="none" />
+          <path d="M40 250h400" stroke-opacity=".2" />
+        </g>
+      )
+    }
+  </svg>
+</div>

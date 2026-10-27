@@ -1,0 +1,70 @@
+# GitHub Pages'e otomatik yayın
+# Resmî Astro yöntemi: https://docs.astro.build/en/guides/deploy/github/
+name: GitHub Pages'e Yayınla
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Aynı anda yalnızca bir yayın çalışır; devam eden yayın iptal edilmez.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Derleme
+    runs-on: ubuntu-latest
+    steps:
+      - name: Depoyu al
+        uses: actions/checkout@v6
+
+      # Yayın adresi ve alt dizin, depo sahibine ve depo adına göre otomatik
+      # belirlenir (site.config.mjs bu ortam değişkenlerini okur).
+      #  - kullanici/proje-adi          → https://kullanici.github.io/proje-adi/
+      #  - kullanici/kullanici.github.io → https://kullanici.github.io/
+      # Kendi alan adınızı kullanıyorsanız depo ayarlarında (Settings > Secrets
+      # and variables > Actions > Variables) SITE_URL ve BASE_PATH değişkenlerini
+      # tanımlayarak bu değerleri geçersiz kılabilirsiniz.
+      - name: Yayın adresini belirle
+        env:
+          OWNER: ${{ github.repository_owner }}
+          REPO: ${{ github.event.repository.name }}
+          VAR_SITE_URL: ${{ vars.SITE_URL }}
+          VAR_BASE_PATH: ${{ vars.BASE_PATH }}
+        run: |
+          owner_lc="${OWNER,,}"
+          repo_lc="${REPO,,}"
+          site_url="${VAR_SITE_URL:-https://${owner_lc}.github.io}"
+          if [ -n "$VAR_BASE_PATH" ]; then
+            base_path="$VAR_BASE_PATH"
+          elif [ "$repo_lc" = "${owner_lc}.github.io" ]; then
+            base_path="/"
+          else
+            base_path="/${REPO}"
+          fi
+          echo "SITE_URL=${site_url}" >> "$GITHUB_ENV"
+          echo "BASE_PATH=${base_path}" >> "$GITHUB_ENV"
+          echo "::notice title=Yayın adresi::${site_url}${base_path%/}/"
+
+      - name: Astro sitesini derle ve Pages paketini yükle
+        uses: withastro/action@v6
+        # Varsayılanlar: package-lock.json → npm, Node.js 24, çıktı dizini dist/
+
+  deploy:
+    name: Yayınlama
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: GitHub Pages'e yayınla
+        id: deployment
+        uses: actions/deploy-pages@v5

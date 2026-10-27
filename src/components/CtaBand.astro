@@ -1,0 +1,41 @@
+---
+import Icon from './Icon.astro';
+import { finalCta } from '@/data/home';
+import { href } from '@/lib/paths';
+
+interface Props {
+  title?: string;
+  text?: string;
+  ctaLabel?: string;
+  ctaPath?: string;
+}
+
+const {
+  title = finalCta.title,
+  text = finalCta.text,
+  ctaLabel = finalCta.cta.label,
+  ctaPath = finalCta.cta.path,
+} = Astro.props;
+---
+
+<section class="on-dark relative isolate overflow-hidden bg-navy-900 text-white" aria-labelledby="cta-baslik">
+  <div class="bg-grid-dark absolute inset-0 -z-10" aria-hidden="true"></div>
+  <svg class="absolute top-1/2 right-0 -z-10 hidden h-[140%] -translate-y-1/2 opacity-60 lg:block" viewBox="0 0 400 400" fill="none" aria-hidden="true">
+    <circle cx="300" cy="200" r="199" stroke="#FFFFFF" stroke-opacity=".08" />
+    <circle cx="300" cy="200" r="140" stroke="#FFFFFF" stroke-opacity=".08" />
+    <circle cx="300" cy="200" r="80" stroke="#C4A46A" stroke-opacity=".35" />
+    <line x1="0" y1="200" x2="400" y2="200" stroke="#FFFFFF" stroke-opacity=".08" />
+    <line x1="300" y1="0" x2="300" y2="400" stroke="#FFFFFF" stroke-opacity=".08" />
+  </svg>
+  <div class="container-x py-20 sm:py-24 lg:py-28">
+    <div class="max-w-3xl" data-reveal>
+      <p class="eyebrow">Ön görüşme</p>
+      <h2 id="cta-baslik" class="h-section mt-5 text-white">{title}</h2>
+      <p class="lead mt-6 max-w-2xl">{text}</p>
+      <a href={href(ctaPath)} class="btn btn-primary mt-10">
+        {ctaLabel}
+        <Icon name="arrow-right" />
+      </a>
+    </div>
+  </div>
+</section>

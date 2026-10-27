@@ -1,0 +1,42 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import PageHero from '@/components/PageHero.astro';
+import Icon from '@/components/Icon.astro';
+import { breadcrumbSchema } from '@/lib/schema';
+
+interface Props {
+  title: string;
+  description: string;
+  path: string;
+  lead: string;
+}
+
+const { title, description, path, lead } = Astro.props;
+const crumbs = [
+  { label: 'Ana Sayfa', path: '/' },
+  { label: title, path },
+];
+---
+
+<BaseLayout title={title} description={description} noindex schema={[breadcrumbSchema(crumbs, Astro.site)]}>
+  <PageHero breadcrumbs={crumbs} eyebrow="Yasal bilgilendirme" title={title} lead={lead} />
+  <section class="section on-light">
+    <div class="container-x">
+      <div class="mx-auto max-w-[70ch]">
+        <div class="mb-12 flex gap-4 rounded-sm border border-dashed border-gold-500 bg-gold-300/15 p-6" role="note">
+          <Icon name="pending" class="mt-0.5 size-5 shrink-0 text-gold-700" />
+          <div class="text-[0.93rem] leading-relaxed text-ink">
+            <p class="font-semibold text-navy-900">Taslak metin — yayından önce tamamlanmalıdır</p>
+            <p class="mt-1">
+              Bu sayfa bir iskelettir ve hukuken tamamlanmış bir metin değildir. İşaretli alanlar; veri sorumlusunun kimliği, gerçek veri
+              işleme faaliyetleri ve iletişim bilgileri netleştikten sonra, tercihen hukuki destek alınarak doldurulmalıdır.
+            </p>
+          </div>
+        </div>
+        <div class="prose-x">
+          <slot />
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

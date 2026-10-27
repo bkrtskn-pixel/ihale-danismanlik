@@ -1,0 +1,60 @@
+---
+import Icon from './Icon.astro';
+import type { Service } from '@/data/services';
+import { href } from '@/lib/paths';
+
+interface Props {
+  service: Service;
+  headingLevel?: 'h2' | 'h3';
+  variant?: 'default' | 'large';
+  delay?: number;
+}
+
+const { service, headingLevel: H = 'h3', variant = 'default', delay = 0 } = Astro.props;
+const url = href(`/hizmetler/${service.slug}/`);
+---
+
+<article
+  class:list={['card card-hover group flex h-full flex-col', variant === 'large' ? 'p-8 sm:p-10' : 'p-7 sm:p-8']}
+  data-reveal
+  style={`--reveal-delay:${delay}ms`}
+>
+  <div class="flex items-start justify-between">
+    <span
+      class="inline-flex size-14 items-center justify-center rounded-sm border border-line bg-paper text-navy-900 transition-colors duration-500 group-hover:border-navy-900 group-hover:bg-navy-900 group-hover:text-gold-500"
+    >
+      <Icon name={service.icon} class="size-7" />
+    </span>
+    <span class="num-tag">{service.number}</span>
+  </div>
+  <H class:list={['h-card mt-8', variant === 'large' && 'sm:text-2xl']}>
+    <a href={url} class="after:absolute after:inset-0 after:content-[''] focus-visible:outline-none">
+      {service.title}
+    </a>
+  </H>
+  <p class="mt-4 flex-1 text-[0.97rem] leading-relaxed text-muted">{service.summary}</p>
+  {
+    variant === 'large' && (
+      <ul class="mt-6 grid gap-x-6 gap-y-2 border-t border-line pt-6 text-[0.9rem] text-ink sm:grid-cols-2">
+        {service.topics.slice(0, 6).map((t) => (
+          <li class="flex items-start gap-2.5">
+            <Icon name="check" class="mt-0.5 size-4 shrink-0 text-gold-700" strokeWidth={2} />
+            <span>{t.title}</span>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+  <span class="link-arrow mt-8" aria-hidden="true">
+    Detaylı İncele
+    <Icon name="arrow-right" />
+  </span>
+  <span class="absolute inset-x-0 bottom-0 h-0.5 origin-left scale-x-0 bg-gold-500 transition-transform duration-500 group-hover:scale-x-100" aria-hidden="true"></span>
+</article>
+
+<style>
+  article:has(a:focus-visible) {
+    outline: 2px solid var(--color-navy-900);
+    outline-offset: 3px;
+  }
+</style>

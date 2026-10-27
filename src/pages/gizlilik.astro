@@ -1,0 +1,52 @@
+---
+import LegalLayout from '@/layouts/LegalLayout.astro';
+import PendingField from '@/components/PendingField.astro';
+import { site } from '@/data/site';
+import { href } from '@/lib/paths';
+---
+
+<LegalLayout
+  title="Gizlilik Politikası"
+  path="/gizlilik/"
+  description="Web sitesinin gizlilik politikası taslağı: çerezler, üçüncü taraf hizmetler ve veri güvenliği."
+  lead="Web sitesinin kullanımı sırasında bilgilerin nasıl ele alındığını açıklayacak gizlilik politikasının taslak yapısı."
+>
+  <h2>1. Kapsam</h2>
+  <p>
+    Bu politika, <PendingField label="Tüzel kişilik unvanı" value={site.legal.companyTitle} /> tarafından işletilen bu web sitesinin
+    ziyaretçilerine yöneliktir. Kişisel verilerin işlenmesine ilişkin ayrıntılı bilgi için <a href={href('/kvkk/')}>KVKK Aydınlatma Metni</a>
+    sayfasına bakınız.
+  </p>
+
+  <h2>2. Prototip aşamasındaki durum</h2>
+  <ul>
+    <li>Site üzerinde çevrim içi form, kullanıcı hesabı veya dosya yükleme alanı bulunmamaktadır.</li>
+    <li>Site herhangi bir analitik, reklam veya takip çerezi kullanmamaktadır.</li>
+    <li>Yazı tipleri ve görseller sitenin kendi dosyalarından sunulmakta, üçüncü taraf içerik sağlayıcılarına istek gönderilmemektedir.</li>
+    <li>
+      Barındırma hizmeti sağlayıcısı (prototip aşamasında GitHub Pages), hizmetin işletilmesi için teknik erişim kayıtları tutabilir. Bu
+      kayıtlar sağlayıcının kendi gizlilik koşullarına tabidir.
+    </li>
+  </ul>
+
+  <h2>3. Çerezler</h2>
+  <p><PendingField label="Gerçek yayında kullanılacak çerezler, amaçları ve saklama süreleri" /></p>
+
+  <h2>4. Üçüncü taraf hizmetler</h2>
+  <p><PendingField label="Kullanılacak barındırma, analitik, harita, form vb. hizmet sağlayıcılar" /></p>
+
+  <h2>5. Veri güvenliği</h2>
+  <p><PendingField label="Alınan teknik ve idari güvenlik tedbirlerinin özeti" /></p>
+
+  <h2>6. Dış bağlantılar</h2>
+  <p>
+    Sitede Kamu İhale Kurumu ve EKAP gibi resmî kurumların internet sitelerine bağlantılar yer alır. Bu sitelerin içerik ve gizlilik
+    uygulamalarından ilgili kurumlar sorumludur.
+  </p>
+
+  <h2>7. İletişim</h2>
+  <p>Gizlilik politikasına ilişkin sorularınız için: <PendingField label="İletişim e-posta adresi" value={site.contact.email} /></p>
+
+  <h2>8. Güncellemeler</h2>
+  <p><PendingField label="Politikanın yürürlük ve son güncelleme tarihi" /></p>
+</LegalLayout>

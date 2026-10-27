@@ -1,0 +1,25 @@
+---
+interface Props {
+  items: { id: string; label: string }[];
+  title?: string;
+}
+const { items, title = 'Bu sayfada' } = Astro.props;
+---
+
+<nav aria-label={title} data-toc class="toc">
+  <p class="font-display text-xs font-semibold tracking-[0.18em] text-muted uppercase">{title}</p>
+  <ol class="mt-5 space-y-1 border-l border-line">
+    {
+      items.map((item) => (
+        <li>
+          <a
+            href={`#${item.id}`}
+            class="-ml-px block border-l-2 border-transparent py-1.5 pl-4 text-[0.9rem] text-muted transition-colors duration-300 hover:text-navy-900 aria-[current]:border-gold-500 aria-[current]:font-medium aria-[current]:text-navy-900"
+          >
+            {item.label}
+          </a>
+        </li>
+      ))
+    }
+  </ol>
+</nav>

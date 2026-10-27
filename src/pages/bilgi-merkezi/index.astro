@@ -1,0 +1,43 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHero from '@/components/PageHero.astro';
+import ArticleCard from '@/components/ArticleCard.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import Disclaimer from '@/components/Disclaimer.astro';
+import { breadcrumbSchema } from '@/lib/schema';
+
+const articles = (await getCollection('articles', ({ data }) => !data.draft)).sort((a, b) => a.data.order - b.data.order);
+
+const crumbs = [
+  { label: 'Ana Sayfa', path: '/' },
+  { label: 'Bilgi Merkezi', path: '/bilgi-merkezi/' },
+];
+---
+
+<BaseLayout
+  title="Bilgi Merkezi"
+  description="Yapım işi ihale dokümanı inceleme, iş deneyim belgeleri ve EKAP üzerinden elektronik ihaleye katılım gibi konularda genel bilgilendirici rehber içerikler."
+  schema={[breadcrumbSchema(crumbs, Astro.site), { '@type': 'CollectionPage', name: 'Bilgi Merkezi', inLanguage: 'tr-TR' }]}
+>
+  <PageHero
+    breadcrumbs={crumbs}
+    eyebrow="Bilgi Merkezi"
+    title="İhale süreçlerine dair rehber içerikler"
+    lead="Yapım işi ihalelerinde sık karşılaşılan konuları genel çerçevesiyle ele alan, resmî kaynaklara yönlendiren bilgilendirici yazılar."
+  />
+
+  <section class="section on-light bg-paper" aria-label="Makaleler">
+    <div class="container-x">
+      <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {articles.map((a, i) => <ArticleCard article={a} headingLevel="h2" delay={(i % 3) * 90} />)}
+      </div>
+      <Disclaimer
+        class="mt-14"
+        text="Bilgi Merkezi'ndeki içerikler genel bilgilendirme amaçlıdır ve hukuki görüş niteliği taşımaz. İhale mevzuatı zaman içinde değişebilir; uygulanacak hükümler somut ihalenin dokümanına ve mevzuatın güncel hâline göre belirlenir."
+      />
+    </div>
+  </section>
+
+  <CtaBand />
+</BaseLayout>

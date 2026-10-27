@@ -1,0 +1,50 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHero from '@/components/PageHero.astro';
+import ServiceCard from '@/components/ServiceCard.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import Disclaimer from '@/components/Disclaimer.astro';
+import { services, serviceDisclaimer } from '@/data/services';
+import { breadcrumbSchema } from '@/lib/schema';
+import { absoluteUrl, href } from '@/lib/paths';
+
+const crumbs = [
+  { label: 'Ana Sayfa', path: '/' },
+  { label: 'Hizmetlerimiz', path: '/hizmetler/' },
+];
+
+const itemList = {
+  '@type': 'ItemList',
+  name: 'Kamu ihale danışmanlığı hizmetleri',
+  itemListElement: services.map((s, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: s.title,
+    url: absoluteUrl(href(`/hizmetler/${s.slug}/`), Astro.site),
+  })),
+};
+---
+
+<BaseLayout
+  title="Hizmetlerimiz"
+  description="Yapım işi ihale dosyası inceleme, yeterlik, iş deneyim belgesi, teklif ve maliyet analizi, EKAP ve sözleşme süreçleri için kamu ihale danışmanlığı hizmetleri."
+  schema={[breadcrumbSchema(crumbs, Astro.site), itemList]}
+>
+  <PageHero
+    breadcrumbs={crumbs}
+    eyebrow="Hizmetlerimiz"
+    title="Yapım işi ihalelerinin her aşamasına yönelik danışmanlık"
+    lead="İhale dokümanının incelenmesinden sözleşmenin tamamlanmasına kadar, süreç boyunca ihtiyaç duyulan teknik, mali ve usule ilişkin desteği altı hizmet alanında sunuyoruz."
+  />
+
+  <section class="section on-light bg-paper" aria-label="Hizmet listesi">
+    <div class="container-x">
+      <div class="grid gap-6 md:grid-cols-2">
+        {services.map((s, i) => <ServiceCard service={s} variant="large" headingLevel="h2" delay={(i % 2) * 90} />)}
+      </div>
+      <Disclaimer text={serviceDisclaimer} class="mt-14" />
+    </div>
+  </section>
+
+  <CtaBand />
+</BaseLayout>

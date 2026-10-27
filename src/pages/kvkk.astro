@@ -1,0 +1,60 @@
+---
+import LegalLayout from '@/layouts/LegalLayout.astro';
+import PendingField from '@/components/PendingField.astro';
+import { site } from '@/data/site';
+
+const { legal, contact } = site;
+---
+
+<LegalLayout
+  title="KVKK Aydınlatma Metni"
+  path="/kvkk/"
+  description="6698 sayılı Kişisel Verilerin Korunması Kanunu kapsamında aydınlatma metni taslağı."
+  lead="6698 sayılı Kişisel Verilerin Korunması Kanunu kapsamında hazırlanacak aydınlatma metninin taslak yapısı."
+>
+  <h2>1. Veri sorumlusu</h2>
+  <p>
+    Kişisel verileriniz, veri sorumlusu sıfatıyla <PendingField label="Tüzel kişilik unvanı" value={legal.companyTitle} /> (“Şirket”)
+    tarafından aşağıda açıklanan kapsamda işlenebilecektir.
+  </p>
+  <ul>
+    <li>MERSİS No: <PendingField label="MERSİS numarası" value={legal.mersisNo} /></li>
+    <li>Adres: <PendingField label="Açık adres" value={contact.address} /></li>
+    <li>E-posta: <PendingField label="E-posta adresi" value={contact.email} /></li>
+    <li>KEP adresi: <PendingField label="KEP adresi" value={legal.kepAddress} /></li>
+  </ul>
+
+  <h2>2. İşlenen kişisel veriler</h2>
+  <p>
+    Bu web sitesinin prototip sürümünde çevrim içi form bulunmamakta ve site üzerinden kişisel veri toplanmamaktadır. İletişim kanalları
+    veya form gibi veri toplayan bileşenler eklendiğinde işlenecek veri kategorileri burada belirtilmelidir.
+  </p>
+  <p><PendingField label="İşlenecek veri kategorileri (ör. kimlik, iletişim, müşteri işlem bilgileri)" /></p>
+
+  <h2>3. Kişisel verilerin işlenme amaçları</h2>
+  <p><PendingField label="İşleme amaçları (ör. danışmanlık taleplerinin değerlendirilmesi, iletişim faaliyetlerinin yürütülmesi)" /></p>
+
+  <h2>4. Toplama yöntemi ve hukuki sebep</h2>
+  <p><PendingField label="Toplama kanalları ve Kanun'un 5. ve 6. maddelerindeki ilgili hukuki sebepler" /></p>
+
+  <h2>5. Kişisel verilerin aktarılması</h2>
+  <p><PendingField label="Aktarım yapılacak alıcı grupları, aktarım amaçları ve varsa yurt dışı aktarım bilgileri" /></p>
+
+  <h2>6. İlgili kişinin hakları</h2>
+  <p>
+    Kanun'un 11. maddesi kapsamında ilgili kişiler, veri sorumlusuna başvurarak kişisel verileriyle ilgili haklarını kullanabilir. Hakların
+    güncel ve tam listesi ile başvuru usulü, ilgili mevzuatın güncel hâline göre bu bölümde ayrıntılandırılmalıdır.
+  </p>
+
+  <h2>7. Başvuru yöntemi</h2>
+  <p><PendingField label="Başvuru kanalları (yazılı başvuru adresi, KEP, kayıtlı e-posta vb.) ve yanıt süreci" /></p>
+
+  <hr />
+  <p class="text-sm text-muted">
+    Güncel mevzuat ve rehberler için Kişisel Verileri Koruma Kurumu'nun resmî internet sitesini (<a
+      href="https://www.kvkk.gov.tr/"
+      target="_blank"
+      rel="noopener noreferrer">kvkk.gov.tr</a
+    >) esas alınız.
+  </p>
+</LegalLayout>
